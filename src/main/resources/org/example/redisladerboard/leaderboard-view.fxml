@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.redisladerboard.LeaderboardController" spacing="10" alignment="CENTER" prefWidth="600" prefHeight="400">
+    <TableView fx:id="tableView" prefWidth="600" prefHeight="400">
+        <columns>
+            <TableColumn fx:id="playerColumn" text="Jugador" prefWidth="300" />
+            <TableColumn fx:id="scoreColumn" text="Puntuación" prefWidth="300" />
+        </columns>
+    </TableView>
+</VBox>
