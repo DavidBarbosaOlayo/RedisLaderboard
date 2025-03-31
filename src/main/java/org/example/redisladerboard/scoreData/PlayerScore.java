@@ -1,4 +1,4 @@
-package org.example.redisladerboard;
+package org.example.redisladerboard.scoreData;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;

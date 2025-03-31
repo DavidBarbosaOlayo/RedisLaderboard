@@ -7,4 +7,8 @@ module org.example.redisladerboard {
 
     opens org.example.redisladerboard to javafx.fxml;
     exports org.example.redisladerboard;
+    exports org.example.redisladerboard.redis;
+    opens org.example.redisladerboard.redis to javafx.fxml;
+    exports org.example.redisladerboard.scoreData;
+    opens org.example.redisladerboard.scoreData to javafx.fxml;
 }
