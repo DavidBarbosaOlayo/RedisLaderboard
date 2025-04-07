@@ -4,11 +4,20 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.redisladerboard.scoreData.LeaderboardController" spacing="10" alignment="CENTER" prefWidth="600" prefHeight="800">
-    <TableView fx:id="tableView" prefWidth="600" prefHeight="800">
+<VBox spacing="10" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.redisladerboard.scoreData.LeaderboardController">
+
+    <!-- Sección Top 5 con estilo mejorado -->
+    <VBox fx:id="topFiveContainer" spacing="5" style="-fx-background-color: #f0f8ff; -fx-padding: 10px; -fx-border-color: #cccccc; -fx-border-width: 2px; -fx-border-radius: 5px;">
+        <!-- Los elementos se añadirán dinámicamente desde el controlador -->
+    </VBox>
+
+    <!-- Tabla principal del leaderboard -->
+    <TableView fx:id="tableView" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" prefWidth="500" prefHeight="720">
         <columns>
-            <TableColumn fx:id="playerColumn" text="Jugador" prefWidth="300" />
-            <TableColumn fx:id="scoreColumn" text="Puntuación" prefWidth="300" />
+            <TableColumn fx:id="playerColumn" text="Jugador" prefWidth="200"/>
+            <TableColumn fx:id="scoreColumn" text="Puntuación" prefWidth="200"/>
         </columns>
     </TableView>
+
 </VBox>
