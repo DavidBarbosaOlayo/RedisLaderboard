@@ -4,50 +4,49 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.application.Platform;
 import javafx.util.Duration;
 import org.example.redisladerboard.redis.RedisManager;
 
+import java.net.URL;
 import java.util.Random;
 
 public class LeaderboardController {
 
-    // Tabla principal del leaderboard
     @FXML
     private TableView<PlayerScore> tableView;
+
     @FXML
     private TableColumn<PlayerScore, String> playerColumn;
+
     @FXML
     private TableColumn<PlayerScore, Double> scoreColumn;
 
-    // Contenedor para mostrar el Top 5 con estilo destacado
     @FXML
     private VBox topFiveContainer;
 
     private RedisManager redisManager;
     private final Random random = new Random();
-    private Timeline timeline; // Referencia al Timeline para actualizaciones periódicas
+    private Timeline timeline;
 
     @FXML
     public void initialize() {
-        // Configurar columnas de la tabla principal y establecer anchos fijos para una mejor visualización
+        // Configuración de columnas
         playerColumn.setCellValueFactory(new PropertyValueFactory<>("player"));
-        playerColumn.setPrefWidth(250);
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
-        scoreColumn.setPrefWidth(250);
 
-        // Opcional: Estilo global para la tabla
-        tableView.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc;");
-
-        // Aplicar un estilo al contenedor del Top 5
-        topFiveContainer.setStyle("-fx-background-color: #f0f8ff; -fx-padding: 10px; -fx-border-color: #cccccc; -fx-border-width: 2px; -fx-border-radius: 5px;");
+        // Asignar clases CSS para el estilo (tema oscuro, textos blancos, etc.)
+        tableView.getStyleClass().add("table-view");
+        topFiveContainer.getStyleClass().add("top-five-container");
 
         // Conectarse a Redis
         redisManager = new RedisManager("localhost", 6379);
@@ -56,17 +55,16 @@ public class LeaderboardController {
         if (redisManager.getTopPlayers(1).isEmpty()) {
             for (int i = 1; i <= 50; i++) {
                 String player = "Jugador" + i;
-                double score = 500 + random.nextInt(9501); // Puntuación aleatoria entre 500 y 10,000
+                double score = 500 + random.nextInt(9501);
                 redisManager.updateScore(player, score);
             }
         }
 
-        // Cargar tanto el top 5 personalizado como la tabla completa inicialmente
         refreshTopFive();
         refreshLeaderboard();
 
-        // Actualización periódica cada 2 segundos:
-        timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+        // Actualización periódica cada 2 segundos
+        timeline = new Timeline(new KeyFrame(Duration.seconds(0.5 + Math.random() * (2.5 - 0.5)), event -> {
             simulateUpdates();
             refreshTopFive();
             refreshLeaderboard();
@@ -75,80 +73,93 @@ public class LeaderboardController {
         timeline.play();
     }
 
+    // Simula la actualización de la puntuación de jugadores aleatorios
     private void simulateUpdates() {
-        // Actualizar aleatoriamente 15 jugadores cada 2 segundos, siempre aumentando la puntuación
-        for (int i = 0; i < 15; i++) {
+        int randomUpdate = (int) (15 + Math.random() * (30 - 15));
+        for (int i = 0; i < randomUpdate; i++) {
             int playerNumber = 1 + random.nextInt(50);
             String player = "Jugador" + playerNumber;
             Double currentScore = redisManager.getScore(player);
             if (currentScore == null) {
                 currentScore = 0.0;
             }
-            // Generar un incremento aleatorio entre 50 y 500
             double increment = 50 + random.nextInt(451);
             double newScore = currentScore + increment;
             redisManager.updateScore(player, newScore);
         }
     }
 
+    // Actualiza el TableView con la lista completa de jugadores
     private void refreshLeaderboard() {
-        // Obtener la lista de jugadores desde Redis (ordenados de mayor a menor)
         ObservableList<PlayerScore> data = FXCollections.observableArrayList();
         for (String player : redisManager.getTopPlayers(50)) {
             Double score = redisManager.getScore(player);
             data.add(new PlayerScore(player, score != null ? score : 0));
         }
-        // Actualizar el TableView en el hilo de la UI
         Platform.runLater(() -> tableView.setItems(data));
     }
 
+    // Actualiza el contenedor del Top 5 con iconos de medallas
     private void refreshTopFive() {
-        // Actualizar el contenedor con el Top 5 de jugadores usando labels y estilos para destacar la sección
         Platform.runLater(() -> {
             topFiveContainer.getChildren().clear();
             int rank = 1;
             for (String player : redisManager.getTopPlayers(5)) {
                 Double score = redisManager.getScore(player);
-
-                // Crear un HBox para cada jugador del top 5 con espaciado de 10px
                 HBox hbox = new HBox(10);
-                hbox.setStyle("-fx-alignment: center-left; -fx-padding: 5px; -fx-background-radius: 5px;");
+                hbox.getStyleClass().add("top-five-hbox");
 
-                // Establecer un fondo distintivo según la posición
+                ImageView medalImageView = new ImageView();
+                medalImageView.setPreserveRatio(true);
+                URL medalUrl;
                 switch (rank) {
                     case 1:
-                        hbox.setStyle(hbox.getStyle() + " -fx-background-color: gold;");
+                        medalUrl = getClass().getResource("/org/example/redisladerboard/gold.png");
+                        if (medalUrl != null) {
+                            medalImageView.setImage(new Image(medalUrl.toExternalForm()));
+                        }
                         break;
                     case 2:
-                        hbox.setStyle(hbox.getStyle() + " -fx-background-color: silver;");
+                        medalUrl = getClass().getResource("/org/example/redisladerboard/silver.png");
+                        if (medalUrl != null) {
+                            medalImageView.setImage(new Image(medalUrl.toExternalForm()));
+                        }
                         break;
                     case 3:
-                        hbox.setStyle(hbox.getStyle() + " -fx-background-color: #cd7f32;"); // Bronze
+                        medalUrl = getClass().getResource("/org/example/redisladerboard/bronze.png");
+                        if (medalUrl != null) {
+                            medalImageView.setImage(new Image(medalUrl.toExternalForm()));
+                        }
                         break;
                     default:
-                        hbox.setStyle(hbox.getStyle() + " -fx-background-color: #e0e0e0;");
                         break;
                 }
+                if (rank <= 3) {
+                    medalImageView.setFitWidth(24);
+                    medalImageView.setFitHeight(24);
+                }
 
-                // Label para la posición (más grande y en negrita)
                 Label rankLabel = new Label(rank + ".");
-                rankLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+                rankLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;");
 
-                // Label para el nombre del jugador
                 Label nameLabel = new Label(player);
-                nameLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #333333;");
+                nameLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: white;");
 
-                // Label para la puntuación
                 Label scoreLabel = new Label(String.valueOf(score != null ? score : 0));
-                scoreLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #333333;");
+                scoreLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: white;");
 
-                hbox.getChildren().addAll(rankLabel, nameLabel, scoreLabel);
+                if (rank <= 3) {
+                    hbox.getChildren().addAll(medalImageView, rankLabel, nameLabel, scoreLabel);
+                } else {
+                    hbox.getChildren().addAll(rankLabel, nameLabel, scoreLabel);
+                }
                 topFiveContainer.getChildren().add(hbox);
                 rank++;
             }
         });
     }
 
+    // Detiene la actualización y cierra la conexión
     public void shutdown() {
         if (timeline != null) {
             timeline.stop();

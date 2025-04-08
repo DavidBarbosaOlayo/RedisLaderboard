@@ -13,10 +13,14 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("leaderboard-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+
+        // Agregar la hoja de estilos (ajusta la ruta según donde esté ubicado)
+        String css = MainApplication.class.getResource("estilos.css").toExternalForm();
+        scene.getStylesheets().add(css);
+
         stage.setTitle("Redis-Leaderboards!");
         stage.setScene(scene);
 
-        // Obtén el controlador para luego cerrar la conexión cuando se cierre la ventana
         LeaderboardController controller = fxmlLoader.getController();
         stage.setOnCloseRequest(event -> {
             controller.shutdown();

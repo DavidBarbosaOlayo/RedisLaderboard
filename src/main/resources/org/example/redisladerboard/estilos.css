@@ -1,0 +1,74 @@
+/* Fondo general de la aplicación */
+.root {
+    -fx-background-color: #2b2b2b; /* Gris oscuro */
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-text-fill: white;
+}
+
+/* Estilo para la TableView */
+.table-view {
+    -fx-background-color: #3c3f41;
+    -fx-control-inner-background: #3c3f41;
+    -fx-table-cell-border-color: #555555;
+    -fx-table-header-border-color: #555555;
+}
+
+/* Encabezados de las columnas: jugador y puntuación */
+.table-view .column-header-background {
+    -fx-background-color: #212121;
+}
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: #212121;
+    -fx-border-color: #555555;
+}
+.table-view .column-header .label {
+    -fx-text-fill: white;
+}
+
+/* Estilo para las celdas de la tabla */
+.table-cell {
+    -fx-text-fill: white;
+}
+
+/* Contenedor del Top 5 con fondo aún más oscuro */
+.top-five-container {
+    -fx-background-color: #212121;  /* Fondo modificado a un tono más oscuro */
+    -fx-padding: 10px;
+    -fx-border-color: #444444;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+}
+
+/* Cada HBox del Top 5 */
+.top-five-hbox {
+    -fx-alignment: center-left;
+    -fx-padding: 5px;
+    -fx-background-color: #555555;
+    -fx-background-radius: 5px;
+}
+
+/* Para reforzar que los textos del Top 5 sean blancos */
+.top-five-hbox Label {
+    -fx-text-fill: white;
+}
+
+/* Estilo para ScrollBars en tema oscuro */
+.scroll-bar {
+    -fx-background-color: #2b2b2b;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #2b2b2b;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #555555;
+    -fx-background-insets: 0;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: #2b2b2b;
+}

@@ -13,10 +13,10 @@
     </VBox>
 
     <!-- Tabla principal del leaderboard -->
-    <TableView fx:id="tableView" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" prefWidth="500" prefHeight="720">
+    <TableView fx:id="tableView" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" prefWidth="520" prefHeight="900">
         <columns>
-            <TableColumn fx:id="playerColumn" text="Jugador" prefWidth="200"/>
-            <TableColumn fx:id="scoreColumn" text="Puntuación" prefWidth="200"/>
+            <TableColumn fx:id="playerColumn" text="Jugador" prefWidth="250"/>
+            <TableColumn fx:id="scoreColumn" text="Puntuación" prefWidth="250"/>
         </columns>
     </TableView>
 
